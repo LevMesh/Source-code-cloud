@@ -13,8 +13,8 @@ pipeline {
         stage ('Stage 2 - Run & test the image') {
             steps {
 
-                sh "docker run -d -p 8085:8080 --name testingjava --network cowsay_1_jenkins-net levvv/java-maven-app:latest"
-                sh 'wget --tries=10 --waitretry=5 --retry-connrefused -O- testingjava:8080'
+                sh "docker run -d -p 8085:8080 --name testingjava levvv/java-maven-app:latest"
+                sh 'wget --tries=10 --waitretry=5 --retry-connrefused -O- localhost:8085'
 
             }
         }
