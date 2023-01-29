@@ -2,20 +2,19 @@ pipeline {
   agent any
 
     stages {
-        when {
-            anyOf {
-                changeRequest()
-            }
+        stage ('condition - Pull Request') {
+            when {
+                anyOf {
+                    changeRequest()
+                }
 
-            
-            stage ('condition - Pull Request') {
                 steps {
                     sh 'trivy image levvv/java-maven-app:latest'
                     sh 'helm datree test k8s/my-app/'
-                }
+                }     
+        
             }
         }
-
 
 
 
