@@ -2,6 +2,23 @@ pipeline {
   agent any
 
     stages {
+        when {
+            anyOf {
+                changeRequest()
+            }
+
+            
+            stage ('condition - Pull Request') {
+                steps {
+                    sh 'trivy image levvv/java-maven-app:latest'
+                    sh 'helm datree test k8s/my-app/'
+                }
+            }
+        }
+
+
+
+
 
         stage ('Stage 1 - Build the docker image') {
             steps {
@@ -10,6 +27,7 @@ pipeline {
                 }
             }
         }
+
         stage ('Stage 2 - Run & test the image') {
             steps {
 
@@ -19,7 +37,7 @@ pipeline {
             }
         }
       
-        stage('STAGE 1 check if branch exists') {
+        stage('Calculating version') {
             steps {
                 script {
                     if (env.BRANCH_NAME == 'main') {
@@ -74,9 +92,7 @@ pipeline {
         }
 
 
-    // stage ('STAGE 5 Release (push to ECR)') {
 
-    // }
 
     }
 
