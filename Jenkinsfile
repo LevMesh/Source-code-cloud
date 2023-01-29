@@ -3,17 +3,13 @@ pipeline {
 
     stages {
         stage ('condition - Pull Request') {
-            when {
-                anyOf {
-                    changeRequest()
-                }
+            when { changeRequest () }
 
-                steps {
-                    sh 'trivy image levvv/java-maven-app:latest'
-                    sh 'helm datree test k8s/my-app/'
-                }     
-        
-            }
+            steps {
+                sh 'trivy image levvv/java-maven-app:latest'
+                sh 'helm datree test k8s/my-app/'
+            }             
+            
         }
 
 
