@@ -11,10 +11,9 @@ pipeline {
         stage ('condition - Pull Request') {
             steps {
                 script {
-                    result = sh (script: "git log -1 | grep -o 'pull request'", returnStatus: True)
-                    println "$result"
-                    if ( "$result" == "pull request" ) {
-                        sh "echo 'This is a pull request'"
+                    is_pull_req = sh(returnStdout: true, script: "git log -1 | grep -o 'pull request'").trim()
+                    if ( is_pull_req == "pull request" ) {
+                        println 'This is a pull request'
                         sh 'trivy image --timeout 15m levvv/java-maven-app:latest'
                         sh 'docker rmi levvv/java-maven-app:latest'
                         sh "git clone git@github.com:LevMesh/Source-code-Deployment.git"
