@@ -11,16 +11,17 @@ pipeline {
         stage ('condition - Pull Request') {
             steps {
                 script {
-                    is_pull_req = sh(returnStdout: true, script: "git log -1 | grep -o 'pull request'").trim()
-                    if ( is_pull_req == "pull request" ) {
-                        println 'This is a pull request'
-                        sh 'trivy image --timeout 15m levvv/java-maven-app:latest'
-                        sh 'docker rmi levvv/java-maven-app:latest'
-                        sh "git clone git@github.com:LevMesh/Source-code-Deployment.git"
-                        sh 'helm datree test --no-record Source-code-Deployment/k8s/my-app/'
-                        cleanWs()
-                        currentBuild.result = 'ABORTED'
-                        error("All good, finished all the pull request steps")
+                    
+                    is_pull_req = sh(returnStdout: true, script: "git log -1 | grep -o 'pull request' || true").trim()
+                if ( is_pull_req == "pull request" ) {
+                    println 'Entered pull request condition'
+                    sh 'trivy image --timeout 15m levvv/java-maven-app:latest'
+                    sh 'docker rmi levvv/java-maven-app:latest'
+                    sh "git clone git@github.com:LevMesh/Source-code-Deployment.git"
+                    sh 'helm datree test --no-record Source-code-Deployment/k8s/my-app/'
+                    cleanWs()
+                    currentBuild.result = 'ABORTED'
+                    error("All good, finished all the pull request steps")
                     }             
                     else {
                         println "This is not a PR, continuing..."
