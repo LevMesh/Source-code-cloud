@@ -14,12 +14,14 @@ pipeline {
             steps {
                 script {
                     if (env.CHANGE_ID) {
-                        stage ('Stage 1') {
-                            sh "echo 'This is a pull request'"
-                            sh 'trivy image levvv/java-maven-app:latest'
-                            sh "git clone git@github.com:LevMesh/Source-code-Deployment.git"
-                            sh 'helm datree test k8s/my-app/'
-                        }
+                        
+                        sh "echo 'This is a pull request'"
+                        sh 'trivy image levvv/java-maven-app:latest'
+                        sh "git clone git@github.com:LevMesh/Source-code-Deployment.git"
+                        sh 'helm datree test k8s/my-app/'
+                        currentBuild.result = 'SUCCESS'
+                        return
+                        
                     }             
                 }
             }    
