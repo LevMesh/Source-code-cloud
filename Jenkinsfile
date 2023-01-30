@@ -11,8 +11,8 @@ pipeline {
         stage ('condition - Pull Request') {
             steps {
                 script {
-                    result = sh (script: "git log -1 | grep 'pull request'", returnStatus: true)
-                    if ( result ) {
+                    result = sh (script: "git log -1 | grep -o 'pull request'", returnStatus: true)
+                    if ( result == 'pull request') {
                         sh "echo 'This is a pull request'"
                         sh 'trivy image --timeout 15m levvv/java-maven-app:latest'
                         sh 'docker rmi levvv/java-maven-app:latest'
@@ -21,8 +21,10 @@ pipeline {
                         cleanWs()
                         currentBuild.result = 'ABORTED'
                         error("All good, finished all the pull request steps")
-
                     }             
+                    else {
+                        println "This is not a PR, continuing..."
+                    }
                 }
             }
         }
