@@ -20,7 +20,7 @@ pipeline {
                         sh 'helm datree test --no-record Source-code-Deployment/k8s/my-app/'
                         cleanWs()
                         currentBuild.result = 'ABORTED'
-                        error("All good, finished all the ")
+                        error("All good, finished all the pull request steps")
 
                     }             
                 }
