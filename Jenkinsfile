@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     result = sh (script: "git log -1 | grep -o 'pull request'", returnStatus: true)
-                    if ( result == 'pull request') {
+                    if ( "$result" == "pull request" ) {
                         sh "echo 'This is a pull request'"
                         sh 'trivy image --timeout 15m levvv/java-maven-app:latest'
                         sh 'docker rmi levvv/java-maven-app:latest'
