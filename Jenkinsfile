@@ -2,25 +2,22 @@ pipeline {
   agent any
 
     stages {
-        stage ('condition - Pull Request') {
-            when { changeRequest () }
-
-            steps {
-                sh 'trivy image levvv/java-maven-app:latest'
-                sh 'helm datree test k8s/my-app/'
-            }             
-            
-        }
-
-
-
-
         stage ('Stage 1 - Build the docker image') {
             steps {
                 script {
                     sh "docker build -t levvv/java-maven-app:latest java-maven-app/"
                 }
             }
+        }
+        stage ('condition - Pull Request') {
+            when { changeRequest () }
+
+            steps {
+                sh 'trivy image levvv/java-maven-app:latest'
+                sh "git clone git@github.com:LevMesh/Source-code-Deployment.git"
+                sh 'helm datree test k8s/my-app/'
+            }             
+            
         }
 
         stage ('Stage 2 - Run & test the image') {
