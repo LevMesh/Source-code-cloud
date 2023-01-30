@@ -11,7 +11,7 @@ pipeline {
         stage ('condition - Pull Request') {
             steps {
                 script {
-                    result = sh (script: "git log -1 | grep -o 'pull request'", returnStatus: true)
+                    result = sh (script: "git log -1 | grep -o 'pull request'", returnStatus: True)
                     println "$result"
                     if ( "$result" == "pull request" ) {
                         sh "echo 'This is a pull request'"
