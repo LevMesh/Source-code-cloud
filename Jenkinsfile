@@ -9,15 +9,20 @@ pipeline {
                 }
             }
         }
+            // when { changeRequest () }
         stage ('condition - Pull Request') {
-            when { changeRequest () }
-
             steps {
-                sh 'trivy image levvv/java-maven-app:latest'
-                sh "git clone git@github.com:LevMesh/Source-code-Deployment.git"
-                sh 'helm datree test k8s/my-app/'
-            }             
-            
+                script {
+                    if (env.CHANGE_ID) {
+                        stage ('Stage 1') {
+                            sh "echo 'This is a pull request'"
+                            sh 'trivy image levvv/java-maven-app:latest'
+                            sh "git clone git@github.com:LevMesh/Source-code-Deployment.git"
+                            sh 'helm datree test k8s/my-app/'
+                        }
+                    }             
+                }
+            }    
         }
 
         stage ('Stage 2 - Run & test the image') {
