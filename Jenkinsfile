@@ -6,6 +6,9 @@ pipeline {
             steps {
                 script {
                     sh "docker build -t levvv/java-maven-app:latest java-maven-app/"
+                    sh "echo ${env.CHANGE_ID}"
+                    sh 'exit 1'
+                    
                 }
             }
         }
@@ -13,18 +16,23 @@ pipeline {
         stage ('condition - Pull Request') {
             steps {
                 script {
-                    if (env.CHANGE_ID) {
+                    if ( env.CHANGE_ID ) {
                         
                         sh "echo 'This is a pull request'"
                         sh 'trivy image levvv/java-maven-app:latest'
                         sh "git clone git@github.com:LevMesh/Source-code-Deployment.git"
                         sh 'helm datree test k8s/my-app/'
                         currentBuild.result = 'SUCCESS'
-                        return
+                        return 'SUCCESS'
                         
                     }             
                 }
-            }    
+            }
+            post ('CleanWorkspace'){
+                always {
+                    cleanWs()
+                }
+            }
         }
 
         stage ('Stage 2 - Run & test the image') {
