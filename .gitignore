@@ -1,0 +1,5 @@
+.idea/*
+target
+my_key.pem
+terraform.tfstate
+terraform.tfstate.backup
