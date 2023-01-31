@@ -92,6 +92,7 @@ pipeline {
   post ('CleanWorkspace'){
     always {
       sh 'docker rm -f testingjava'
+      sh "docker rmi levvv/java-maven-app:$env.VERSION"
       cleanWs()
       
     }
